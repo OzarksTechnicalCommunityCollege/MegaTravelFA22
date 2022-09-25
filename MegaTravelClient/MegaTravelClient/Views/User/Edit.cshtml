@@ -1,0 +1,83 @@
+﻿@using MegaTravelClient.Models
+@model User
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h2>Edit User</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <h4>YourData</h4>
+        <hr />
+        @Html.HiddenFor(model => model.UserId)
+
+        <div>
+            @Html.LabelFor(model => model.FirstName)
+            <div>
+                @Html.EditorFor(model => model.FirstName)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.LastName)
+            <div>
+                @Html.EditorFor(model => model.LastName)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Email)
+            <div>
+                @Html.EditorFor(model => model.Email)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Street1)
+            <div>
+                @Html.EditorFor(model => model.Street1)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Street2)
+            <div>
+                @Html.EditorFor(model => model.Street2)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.City)
+            <div>
+                @Html.EditorFor(model => model.City)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.State)
+            <div>
+                @Html.EditorFor(model => model.State)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.ZipCode)
+            <div>
+                @Html.EditorFor(model => model.ZipCode)
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Phone)
+            <div>
+                @Html.EditorFor(model => model.Phone)
+            </div>
+        </div>
+
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    </div>
+}
