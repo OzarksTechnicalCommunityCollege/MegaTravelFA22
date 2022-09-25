@@ -203,6 +203,72 @@ namespace MegaTravelAPI.Controllers
         }
 
         /// <summary>
+        /// Accept the request to update a user
+        /// </summary>
+        /// <param name="incomingUser"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateUser", Name = "UpdateUser")]
+        [AllowAnonymous]
+        public async Task<CreateUserResponseModel> UpdateUser(UserData incomingUser)
+        {
+            // create an instance of our response
+            CreateUserResponseModel response = new CreateUserResponseModel();
+
+            // did we actually  get a user from the client?
+            if (incomingUser != null)
+            {
+                try
+                {
+                    // call the method in the DAl that will update and save the record
+                    var user = await repository.UpdateUserRecord(incomingUser).ConfigureAwait(true);
+
+                    if (user.StatusCode == 200)
+                    {
+                        // user has been updated
+                        response.Status = true;
+                        response.Message = "Update Successful";
+                        response.StatusCode = 200;
+                        // send back the user information for the updated object
+                        response.Data = new UserData();
+                        response.Data.UserId = user.Data.UserId;
+                        response.Data.FirstName = user.Data.FirstName;
+                        response.Data.LastName = user.Data.LastName;
+                        response.Data.Email = user.Data.Email;
+                        response.Data.Phone = user.Data.Phone;
+                        response.Data.Street1 = user.Data.Street1;
+                        response.Data.Street2 = user.Data.Street2;
+                        response.Data.City = user.Data.City;
+                        response.Data.State = user.Data.State;
+                        response.Data.ZipCode = user.Data.ZipCode;
+
+                    }
+                    else
+                    {
+                        // the object is null
+                        response.Status = false;
+                        response.Message = "Update failed";
+                        response.StatusCode = 500;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response.Status = false;
+                    response.Message = "Update failed";
+                    response.StatusCode = 500;
+                    Console.WriteLine($"UpdateUser -- {ex.Message}");
+                }
+            }
+            else
+            {
+                // the object is null
+                response.Status = false;
+                response.Message = "The Object is invalid";
+                response.StatusCode = 500;
+            }
+            return response;
+        }
+
+        /// <summary>
         /// generate the token for registration
         /// </summary>
         /// <param name="userInfo"></param>

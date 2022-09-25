@@ -33,5 +33,13 @@ namespace MegaTravelAPI.IRepository
         /// <param name="tokenData"></param>
         /// <returns></returns>
         Task<UserData> FindByName(string username);
+
+        /// <summary>
+        /// Update the user data
+        /// </summary>
+        /// <param name="usermodel"></param>
+        /// <returns></returns>
+        Task<SaveUserResponse> UpdateUserRecord(UserData userInfo);
+
     }
 }

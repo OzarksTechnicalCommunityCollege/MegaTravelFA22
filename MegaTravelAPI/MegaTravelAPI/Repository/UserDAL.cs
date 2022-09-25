@@ -252,6 +252,59 @@ namespace MegaTravelAPI.Data
             return user;
         }
         #endregion
+        #region Update User Record Method
+        /// <summary>
+        /// Update the user database info
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        public async Task<SaveUserResponse> UpdateUserRecord(UserData userInfo)
+        {
+            // create an instance of our sresponse object
+            SaveUserResponse response = new SaveUserResponse();
+
+            try
+            {
+                using (var db = new MegaTravelContext(_config))  // gives access to all tables
+                {
+                    // find the current user in the database
+                    // entity framework
+                    // linq query to find the user
+                    var result = db.Users.SingleOrDefault(u => u.UserId == userInfo.UserId);
+                    // check to see if we actually got a user
+                    if (result != null)
+                    {
+                        // update the user data
+                        result.FirstName = userInfo.FirstName;
+                        result.LastName = userInfo.LastName;
+                        result.Email = userInfo.Email;
+                        result.Street1 = userInfo.Street1;
+                        result.Street2 = userInfo.Street2;
+                        result.City = userInfo.City;
+                        result.State = userInfo.State;
+                        result.ZipCode = userInfo.ZipCode;
+                        result.Phone = userInfo.Phone;
+
+                        // save this user in the database
+                        db.SaveChanges();
+                        // set the result and pass the data back
+                        response.StatusCode = 200;
+                        response.Message = "Update Successful";
+                        response.Status = true;
+                        response.Data = result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UpdateUserRecord -- {ex.Message}");
+                response.Status = false;
+                response.StatusCode = 500;
+            }
+            return response;
+        }
+        #endregion
+
 
 
 
