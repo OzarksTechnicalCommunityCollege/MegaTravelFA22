@@ -29,6 +29,27 @@ namespace MegaTravelClient.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Post Registration method will be called after API call
+        /// </summary>
+        /// <param name="userData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Registration(RegistrationModel userData)
+        {
+            // check to see if there are any errors before we proceed
+            if (ModelState.IsValid)
+            {
+                ProcessForm(userData);      // update if all is good
+                return View("Views/Home/Login.cshtml");
+            }
+            else
+            {
+                return View();
+            }
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View();
