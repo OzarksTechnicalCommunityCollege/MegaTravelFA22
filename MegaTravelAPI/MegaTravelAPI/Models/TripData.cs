@@ -1,4 +1,6 @@
-﻿namespace MegaTravelAPI
+﻿using MegaTravelAPI.Models;
+
+namespace MegaTravelAPI
 {
     public class TripData
     {
@@ -11,6 +13,7 @@
         public DateTime EndDate { get; set; }
         public int NumAdults { get; set; }
         public int NumChildren { get; set; }
+        public UserData userInfo { get; set; }
 
     }
 }

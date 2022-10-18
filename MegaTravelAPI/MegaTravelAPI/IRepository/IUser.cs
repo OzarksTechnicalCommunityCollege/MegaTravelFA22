@@ -41,5 +41,11 @@ namespace MegaTravelAPI.IRepository
         /// <returns></returns>
         Task<SaveUserResponse> UpdateUserRecord(UserData userInfo);
 
+        /// <summary>
+        /// Get all trips for user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        List<Trip> GetTripsByUser(int userID);
     }
 }

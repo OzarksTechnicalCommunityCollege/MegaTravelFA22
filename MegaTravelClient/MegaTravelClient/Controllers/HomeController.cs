@@ -2,23 +2,11 @@
 using MegaTravelClient.Models;
 using Newtonsoft.Json;
 using MegaTravelClient.Utility;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace MegaTravelClient.Controllers
 {
-
     public class HomeController : Controller
     {
-        public IConfiguration _configuration;
-
-        public HomeController(IConfiguration config)
-        {
-            _configuration = config;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -26,6 +14,26 @@ namespace MegaTravelClient.Controllers
 
         public IActionResult Registration()
         {
+            return View();
+        }
+        /// <summary>
+        /// Post Registration method will be called after API call
+        /// </summary>
+        /// <param name="userData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Registration(RegistrationModel userData)
+        {
+            // check to see if there are any errors before we proceed
+            if (ModelState.IsValid)
+            {
+                ProcessForm(userData);      // update if all is good
+                return View("Views/Home/Login.cshtml");
+            }
+            else
+            {
+                return View();
+            }
             return View();
         }
 
@@ -167,22 +175,7 @@ namespace MegaTravelClient.Controllers
                         {
                             //everything is OK
                             //the user should now be considered authenticated
-                            //create claims details based on the user information
-                            var claims = new[] {
-                                new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                                new Claim("UserId", ResponseModel.UserID.ToString())
-                             };
 
-                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                            var token = new JwtSecurityToken(
-                                _configuration["Jwt:Issuer"],
-                                _configuration["Jwt:Audience"],
-                                claims,
-                                expires: DateTime.UtcNow.AddMinutes(10),
-                                signingCredentials: signIn);
 
                             //Take the user to the UserDashboard
                             return View("Views/User/Index.cshtml", ResponseModel);

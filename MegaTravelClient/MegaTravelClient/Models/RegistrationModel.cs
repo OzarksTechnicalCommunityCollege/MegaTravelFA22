@@ -31,7 +31,7 @@ namespace MegaTravelClient.Models
 
         [ValidateNever]
         public string Street2 { get; set; } = null!;
-
+        
         [Required]
         [StringLength(30, MinimumLength = 1)]
         public string City { get; set; } = null!;
@@ -60,5 +60,4 @@ namespace MegaTravelClient.Models
         [HiddenInput]
         public string UserType { get; set; } = null!;
     }
-
 }

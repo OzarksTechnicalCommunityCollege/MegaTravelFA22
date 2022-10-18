@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using System.Text;
+using System.Security.Cryptography.Xml;
 
 namespace MegaTravelAPI.Data
 {
@@ -200,6 +201,7 @@ namespace MegaTravelAPI.Data
         public List<TripData> GetAllTripsForAgent(int agentID)
         {
             List<TripData> tripList = new List<TripData>();
+            UserData selectedUser = null;
 
             try
             {
@@ -208,22 +210,41 @@ namespace MegaTravelAPI.Data
 
                 foreach (Trip trip in trips)
                 {
-
-                    //get all of the object data to send back
-                    tripList.Add(new TripData()
+                    // query the database to get the user by ID
+                    var query = context.Users.Where(u => u.UserId == trip.UserId).FirstOrDefault<User>();
+                    if (query != null)
                     {
+                        // set up the UserData object so we can return it
+                        selectedUser = new UserData
+                        {
+                            UserId = query.UserId,
+                            FirstName = query.FirstName,
+                            LastName = query.LastName,
+                            Email = query.Email,
+                            Street1 = query.Street1,
+                            Street2 = query.Street2,
+                            City = query.City,
+                            State = query.State,
+                            ZipCode = query.ZipCode,
+                            Phone = query.Phone
+                        };
+                        //get all of the object data to send back
+                        tripList.Add(new TripData()
+                        {
 
-                        UserID = trip.UserId,
-                        AgentID = trip.AgentId,
-                        TripID = trip.TripId,
-                        TripName = trip.TripName,
-                        Location = trip.Location,
-                        StartDate = trip.StartDate,
-                        EndDate = trip.EndDate,
-                        NumAdults = trip.NumAdults,
-                        NumChildren = trip.NumChildren
+                            UserID = trip.UserId,
+                            AgentID = trip.AgentId,
+                            TripID = trip.TripId,
+                            TripName = trip.TripName,
+                            Location = trip.Location,
+                            StartDate = trip.StartDate,
+                            EndDate = trip.EndDate,
+                            NumAdults = trip.NumAdults,
+                            NumChildren = trip.NumChildren,
+                            userInfo = selectedUser
 
-                    });
+                        });;
+                    }
 
 
                 }

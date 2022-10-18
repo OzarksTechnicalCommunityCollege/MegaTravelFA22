@@ -1,4 +1,4 @@
-﻿@using MegaTravelClient.Models
+@using MegaTravelClient.Models
 @model RegistrationModel
 @{
     ViewData["Title"] = "User Registration";
@@ -10,7 +10,7 @@
     <form asp-action="Registration" method="post">
         <label for="FirstName">First Name: </label>
         <input asp-for="FirstName" /> <br />
-        <span asp-validation-for="FirstName" class="text-danger"></span> <br />
+        <span asp-validation-for="FirstName" class="text-danger"></span> <br/>
 
         <label for="LastName">Last Name: </label>
         <input asp-for="LastName" /><br />
