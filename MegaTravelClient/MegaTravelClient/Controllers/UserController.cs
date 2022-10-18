@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 
 namespace MegaTravelClient.Controllers
 {
-    //[Authorize]
     public class UserController : Controller
     {
         public IActionResult Index(LoginResponseModel userData)
@@ -76,6 +75,25 @@ namespace MegaTravelClient.Controllers
 
             }
             return View();
+        }
+
+        // call the endpoint to get all the trips for user
+        // we will expect the response model
+        public async Task<IActionResult> GetAllTripsForUserView([FromQuery(Name = "userID")] int userID)
+        {
+            GetTripsForUserResponseModel ResponseModel = null;
+            try
+            {
+                var strSerializedData = string.Empty;
+                ServiceHelper objService = new ServiceHelper();
+                string response = await objService.GetRequest(strSerializedData, ConstantValues.GetAllTripsForUser + "?userID=" + userID, false, string.Empty).ConfigureAwait(true);
+                ResponseModel = JsonConvert.DeserializeObject<GetTripsForUserResponseModel>(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetAllTripsForUserView API " + ex.Message);
+            }
+            return View(ResponseModel);
         }
     }
 }

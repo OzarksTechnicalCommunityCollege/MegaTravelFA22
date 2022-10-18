@@ -25,6 +25,7 @@ namespace MegaTravelAPI.Data
         public virtual DbSet<Login> Logins { get; set; } = null!;
         public virtual DbSet<Trip> Trips { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+      //  public virtual DbSet<TripPayment> TripPayment { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

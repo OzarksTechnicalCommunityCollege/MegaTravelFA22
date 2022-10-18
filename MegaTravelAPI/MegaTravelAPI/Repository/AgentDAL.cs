@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using System.Text;
+using System.Security.Cryptography.Xml;
 
 namespace MegaTravelAPI.Data
 {
@@ -205,7 +206,7 @@ namespace MegaTravelAPI.Data
             try
             {
                 //query the database to get all of the trips for this agentID
-                var trips = context.Trips.Where(x => x.AgentId == agentID).ToList();
+                var trips = context.Trips.Where(x=> x.AgentId == agentID).ToList();
 
                 foreach (Trip trip in trips)
                 {
@@ -242,7 +243,7 @@ namespace MegaTravelAPI.Data
                             NumChildren = trip.NumChildren,
                             userInfo = selectedUser
 
-                        }); ;
+                        });;
                     }
 
 

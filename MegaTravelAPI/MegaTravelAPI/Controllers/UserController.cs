@@ -29,8 +29,46 @@ namespace MegaTravelAPI.Controllers
             config = Config;
             context = new MegaTravelContext(config);
             repository = new UserDAL(context, config);
-            
+        }
+        /// <summary>
+        /// Get all trips for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("GetAllTripsByUser", Name = "GetAllTripsByUser")]
+        [AllowAnonymous]
+        public async Task<GetTripsForUserResponseModel> GetAllTripsForUser(int userId)
+        {
+            GetTripsForUserResponseModel responseModel = new GetTripsForUserResponseModel();
+            // set up a list to hold the ist of trips we will get back from the db
+            List<Trip> tripList = new List<Trip>();
 
+            try
+            {
+                tripList = repository.GetTripsByUser(userId);
+
+                // check to be sure list is not empty
+                if (tripList.Count > 0)
+                {
+                    responseModel.Status = true;
+                    responseModel.StatusCode = 200;
+                    responseModel.tripList = tripList;
+                }
+                else
+                {
+                    responseModel.Status = false;
+                    responseModel.StatusCode = 500;
+                    responseModel.Message = "Get Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                responseModel.Status = false;
+                responseModel.StatusCode = 400;
+                responseModel.Message = ex.Message;
+                Console.WriteLine(ex.Message);
+            }
+            return responseModel;
         }
 
         [HttpGet("GetUsers", Name = "GetUsers")]
@@ -201,7 +239,6 @@ namespace MegaTravelAPI.Controllers
 
             return response;
         }
-
         /// <summary>
         /// Accept the request to update a user
         /// </summary>

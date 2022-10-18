@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace MegaTravelAPI.Data
 {
@@ -110,14 +111,20 @@ namespace MegaTravelAPI.Data
                     UserType = "User"
                 };
 
-                //get the ID of the most recent user added to the DB
-                var highestID = context.Users.Max(x => x.UserId);
+                // check to see if we have users
+                var num = context.Users.Count();
+                var highestID = 0;
 
+                if (num != 0)
+                {
+                    //get the ID of the most recent user added to the DB
+                    highestID = context.Users.Max(x => x.UserId);
+                }
                 //set the user ID to be the next ID value
                 objApplicationUser.UserId = highestID + 1;
 
                 //save this user in the database
-                using(var db = new MegaTravelContext(_config))
+                using (var db = new MegaTravelContext(_config))
                 {
                     db.Users.Add(objApplicationUser);
                     db.SaveChanges();
@@ -272,11 +279,11 @@ namespace MegaTravelAPI.Data
                     // linq query to find the user
                     var result = db.Users.SingleOrDefault(u => u.UserId == userInfo.UserId);
                     // check to see if we actually got a user
-                    if (result != null)
+                    if (result !=  null)
                     {
                         // update the user data
                         result.FirstName = userInfo.FirstName;
-                        result.LastName = userInfo.LastName;
+                        result.LastName = userInfo.LastName;    
                         result.Email = userInfo.Email;
                         result.Street1 = userInfo.Street1;
                         result.Street2 = userInfo.Street2;
@@ -305,8 +312,61 @@ namespace MegaTravelAPI.Data
         }
         #endregion
 
+        #region Get all Trips for User
+        /// <summary>
+        /// Get all of the trips associated with this user
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        //public async Task<GetTripsForUserResponseModel> GetTripsForUser(int userID)
+        public List<Trip> GetTripsByUser(int userID)
+        {
+            // create an instance of our Trip list object
+            List<Trip> tripList = new List<Trip>();
 
+            try
+            {
+                //using (var db = new MegaTravelContext(_config))  // gives access to all tables
+                //{
 
+                    //query the database to get all of the trips for this agentID
+                    var trips = context.Trips.Where(x => x.UserId == userID).ToList();
 
+                    foreach (var trip in trips)
+                    {
+                        // get the agent associated with this trip
+                        var agent = context.Agents
+                            .Where(x => x.AgentId == trip.AgentId).FirstOrDefault();
+                        Agent currentAgent = new Agent()
+                        {
+                            AgentId = agent.AgentId,
+                            FirstName = agent.FirstName,
+                            LastName = agent.LastName,
+                            OfficeLocation = agent.OfficeLocation,
+                            Phone = agent.Phone,
+                        };
+
+                        tripList.Add(new Trip()
+                        {
+                            TripId = trip.TripId,
+                            UserId = trip.UserId,
+                            AgentId = trip.AgentId,
+                            TripName = trip.TripName,
+                            Location = trip.Location,
+                            StartDate = trip.StartDate,
+                            EndDate = trip.EndDate,
+                            NumAdults = trip.NumAdults
+                        });
+                    }
+
+                //}
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetTripsForUser -- {ex.Message}");
+            }
+            return tripList;
+        }
+        #endregion
     }
 }

@@ -2,11 +2,9 @@
 using MegaTravelClient.Models;
 using MegaTravelClient.Utility;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MegaTravelClient.Controllers
 {
-   // [Authorize]
     public class AgentController : Controller
     {
         public IActionResult Index(LoginResponseModel userData)
